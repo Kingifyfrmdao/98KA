@@ -47,7 +47,7 @@ local function downloadFile(path, func)
 		local success = false
 		for attempt = 1, 3 do
 			local suc, result = pcall(function()
-				return game:HttpGet('https://raw.githubusercontent.com/poopparty/poopparty/' .. readfile('newvape/profiles/commit.txt') .. '/' .. select(1, path:gsub('newvape/', '')), true)
+				return game:HttpGet('https://raw.githubusercontent.com/Kingifyfrmdao/98KA/' .. readfile('newvape/profiles/commit.txt') .. '/' .. select(1, path:gsub('newvape/', '')), true)
 			end)
 			if suc and result ~= '404: Not Found' then
 				res = result
@@ -109,7 +109,7 @@ pcall(migrateProfiles)
 local function finishLoading()
 	vape.Init = nil
 	if not vape.Load then
-		warn('[AEROV4] vape.Load is nil skipping load')
+		warn('[98KAV4] vape.Load is nil skipping load')
 		return
 	end
 	vape:Load()
@@ -128,7 +128,7 @@ local function finishLoading()
 				repeat task.wait() until game:IsLoaded()
 				if getgenv and not getgenv().shared then getgenv().shared = {} end
 				shared.vapereload = true
-				loadstring(game:HttpGet('https://raw.githubusercontent.com/poopparty/poopparty/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
+				loadstring(game:HttpGet('https://raw.githubusercontent.com/Kingifyfrmdao/98KA/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
 			]]
 			if shared.VapeDeveloper then
 				teleportScript = 'shared.VapeDeveloper = true\n' .. teleportScript
@@ -140,7 +140,7 @@ local function finishLoading()
 				teleportScript = 'shared.ValidatedUsername = "' .. shared.ValidatedUsername .. '"\n' .. teleportScript
 			end
 			local _ok, _err = pcall(function() vape:Save() end)
-			if not _ok then warn('[AEROV4] save failed before teleport: ' .. tostring(_err)) end
+			if not _ok then warn('[98KAV4] save failed before teleport: ' .. tostring(_err)) end
 			queue_on_teleport(teleportScript)
 		end
 	end))
@@ -152,14 +152,14 @@ local function finishLoading()
 			task.spawn(function()
 				local deadline = tick() + 15
 				while tick() < deadline do
-					if getgenv()._aeroTierReady then break end
+					if getgenv()._98KATierReady then break end
 					task.wait(0.5)
 				end
 				local tier = 0
-				if getgenv().getAeroTier then
-					tier = getgenv().getAeroTier(playersService.LocalPlayer) or 0
+				if getgenv().get98KATier then
+					tier = getgenv().get98KATier(playersService.LocalPlayer) or 0
 				end
-				vape:CreateNotification('[AEROV4] Finished Loading [Tier ' .. tostring(tier) .. ']', name .. (vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press ' .. table.concat(vape.Keybind, ' + '):upper() .. ' to open GUI'), 5)
+				vape:CreateNotification('[98KA] Finished Loading [Tier ' .. tostring(tier) .. ']', name .. (vape.VapeButton and 'Press the button in the top right to open GUI' or 'Press ' .. table.concat(vape.Keybind, ' + '):upper() .. ' to open GUI'), 5)
 			end)
 		end
 	end
@@ -176,25 +176,25 @@ end
 
 local guiFunc, guiErr = loadstring(downloadFile('newvape/guis/' .. gui .. '.lua'), 'gui')
 if not guiFunc then
-	error('[AEROV4] Failed to load GUI: ' .. tostring(guiErr))
+	error('[98KAV4] Failed to load GUI: ' .. tostring(guiErr))
 end
 vape = guiFunc()
 if not vape then
-	error('[AEROV4] GUI returned nil file may be corrupted try deleting newvape/guis/' .. gui .. '.lua and reinjecting.')
+	error('[98KAV4] GUI returned nil file may be corrupted try deleting newvape/guis/' .. gui .. '.lua and reinjecting.')
 end
 if not vape.Load then
 	if delfile then pcall(function() delfile('newvape/guis/' .. gui .. '.lua') end) end
-	error('[AEROV4] gui file corrupted (missing load) reinject..')
+	error('[98KAV4] gui file corrupted (missing load) reinject..')
 end
 if not vape.Init and not vape.Load then
-	error('[AEROV4] failed to initialize properly reinject to fix this bs')
+	error('[98KAV4] failed to initialize properly reinject to fix this bs')
 end
 shared.vape = vape
 task.wait(0.1)
 
 do
 	local _req = (syn and syn.request) or (http_request and function(t) return http_request(t) end) or request or function() return {Body='{"tier":0}'} end
-	local _CONFIG_URL = 'https://gist.githubusercontent.com/poopparty/a817668f8805b6d44fa54ff13dc8edf4/raw/url.txt'
+	local _CONFIG_URL = 'https://gist.githubusercontent.com/Kingifyfrmdao/a817668f8805b6d44fa54ff13dc8edf4/raw/url.txt'
 
 	local _liveUrl = nil
 	local function _getUrl()
@@ -265,17 +265,17 @@ do
 	local lagConnections = {}
 	local function _registerCommand(name, fn) _commands[name] = fn end
 
-	getgenv()._aeroTierReady = false
-	getgenv().getAeroTier = function(player) return 0 end
+	getgenv()._98KATierReady = false
+	getgenv().get98KATier = function(player) return 0 end
 
 	task.spawn(function()
 		local lplr = playersService.LocalPlayer
 		_tierCache[lplr.UserId] = _ft(lplr.UserId)
-		getgenv().getAeroTier = function(player)
+		getgenv().get98KATier = function(player)
 			local t = _tierCache[player.UserId]
 			return type(t) == 'number' and t or 0
 		end
-		getgenv()._aeroTierReady = true
+		getgenv()._98KATierReady = true
 		task.wait(1)
 		for _, p in playersService:GetPlayers() do
 			if p.UserId ~= lplr.UserId then _queueFetch(p.UserId) end
@@ -333,8 +333,8 @@ do
 		return type(t) == 'number' and t or 0
 	end
 	getgenv().getAccountTier = getAccountTier
-	getgenv()._aerov4_getUrl = _getUrl
-	getgenv()._aerov4_req = _req
+	getgenv()._98KAv4_getUrl = _getUrl
+	getgenv()._98KAv4_req = _req
 
 	local function startLag(userId)
 		local key = tostring(userId)
@@ -398,16 +398,16 @@ do
 	task.spawn(function()
 		local deadline = tick() + 15
 		while tick() < deadline do
-			if getgenv()._aeroTierReady then break end
+			if getgenv()._98KATierReady then break end
 			task.wait(0.5)
 		end
-		myTier = getgenv().getAeroTier and getgenv().getAeroTier(lplr) or 0
+		myTier = getgenv().get98KATier and getgenv().get98KATier(lplr) or 0
 	end)
 
 	local function reportInjection(injected)
 		task.spawn(function()
-			local getUrl = getgenv()._aerov4_getUrl
-			local req = getgenv()._aerov4_req
+			local getUrl = getgenv()._98KAv4_getUrl
+			local req = getgenv()._98KAv4_req
 			if not getUrl or not req then return end
 			local url = getUrl()
 			if not url then return end
@@ -431,30 +431,30 @@ do
 	task.spawn(function()
 		local deadline = tick() + 15
 		while tick() < deadline do
-			if getgenv()._aeroTierReady then break end
+			if getgenv()._98KATierReady then break end
 			task.wait(0.5)
 		end
-		myTier = getgenv().getAeroTier and getgenv().getAeroTier(lplr) or 0
+		myTier = getgenv().get98KATier and getgenv().get98KATier(lplr) or 0
 		reportInjection(true)
 	end)
 
 	vape:Clean(function() reportInjection(false) end)
 
-	getgenv()._aeroInjectedUsers = {}
+	getgenv()._98KAInjectedUsers = {}
 
 	local pollingInjActive = true
 	vape:Clean(function() pollingInjActive = false end)
 	task.spawn(function()
 		local deadline = tick() + 16
 		while tick() < deadline do
-			if getgenv()._aeroTierReady then break end
+			if getgenv()._98KATierReady then break end
 			task.wait(0.5)
 		end
 		while pollingInjActive do
 			task.wait(5)
 			if myTier < 4 then continue end
-			local getUrl = getgenv()._aerov4_getUrl
-			local req = getgenv()._aerov4_req
+			local getUrl = getgenv()._98KAv4_getUrl
+			local req = getgenv()._98KAv4_req
 			if not getUrl or not req then continue end
 			local url = getUrl()
 			if not url then continue end
@@ -487,18 +487,18 @@ do
 				end
 			end
 
-			local prev = getgenv()._aeroInjectedUsers
+			local prev = getgenv()._98KAInjectedUsers
 			for uid, info in newMap do
 				if not prev[uid] then
-					vape:CreateNotification('[AEROV4] Injected', '[T'..tostring(info.tier)..'] '..info.username..' is now injected', 5)
+					vape:CreateNotification('[98KAV4] Injected', '[T'..tostring(info.tier)..'] '..info.username..' is now injected', 5)
 				end
 			end
 			for uid, info in prev do
 				if not newMap[uid] then
-					vape:CreateNotification('[AEROV4] Uninjected', '[T'..tostring(info.tier)..'] '..info.username..' has uninjected', 5)
+					vape:CreateNotification('[98KAV4] Uninjected', '[T'..tostring(info.tier)..'] '..info.username..' has uninjected', 5)
 				end
 			end
-			getgenv()._aeroInjectedUsers = newMap
+			getgenv()._98KAInjectedUsers = newMap
 		end
 	end)
 end
@@ -532,7 +532,7 @@ if not shared.VapeIndependent then
 	else
 		if not shared.VapeDeveloper then
 			local suc, res = pcall(function()
-				return game:HttpGet('https://raw.githubusercontent.com/poopparty/poopparty/' .. readfile('newvape/profiles/commit.txt') .. '/games/' .. gameFileId .. '.lua', true)
+				return game:HttpGet('https://raw.githubusercontent.com/Kingifyfrmdao/98KA/' .. readfile('newvape/profiles/commit.txt') .. '/games/' .. gameFileId .. '.lua', true)
 			end)
 			if suc and res ~= '404: Not Found' then
 				loadstring(downloadFile('newvape/games/' .. gameFileId .. '.lua'), tostring(gameFileId))(...)
