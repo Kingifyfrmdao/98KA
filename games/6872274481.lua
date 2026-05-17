@@ -1,7 +1,7 @@
 local run = function(func)
     local ok, err = pcall(func)
     if not ok then
-        warn('[AEROV4] module failed to load: ' .. tostring(err))
+        warn('[98KA] module failed to load: ' .. tostring(err))
     end
 end
 local vapeEvents = setmetatable({}, {
@@ -2757,7 +2757,7 @@ run(function()
 
     local function createkitrender(plr)
         local icon = Instance.new("ImageLabel")
-        icon.Name = "AeroV4KitRender" 
+        icon.Name = "98KAKitRender" 
         icon.AnchorPoint = Vector2.new(1, 0.5)
         icon.BackgroundTransparency = 1
         icon.Position = UDim2.new(1.05, 0, 0.5, 0)
@@ -2789,7 +2789,7 @@ run(function()
         end
         
         for _, v in ipairs(PlayerGui:GetDescendants()) do
-            if v:IsA("ImageLabel") and v.Name == "AeroV4KitRender" then  
+            if v:IsA("ImageLabel") and v.Name == "98KAKitRender" then  
                 v:Destroy()
             end
         end
@@ -2852,7 +2852,7 @@ run(function()
             local card = container:FindFirstChild("1") and container["1"]:FindFirstChild("MatchDraftPlayerCard")
             if not card then return end
             
-            local icon = card:FindFirstChild("AeroV4KitRender")  
+            local icon = card:FindFirstChild("98KAKitRender")  
             if not icon then
                 icon = createkitrender(playerFound)
                 icon.Parent = card
@@ -2887,7 +2887,7 @@ run(function()
     local function createKitLabel(parent, kitImage)
         if kitLabels[parent] then kitLabels[parent]:Destroy() end
         local kitLabel = Instance.new("ImageLabel")
-        kitLabel.Name = "AeroV4KitIcon"
+        kitLabel.Name = "98KAKitIcon"
         kitLabel.Size = UDim2.new(1, 0, 1, 0)
         kitLabel.Position = UDim2.new(1.1, 0, 0, 0)
         kitLabel.BackgroundTransparency = 1
@@ -7188,11 +7188,11 @@ run(function()
 	local CustomPrediction
 	local HorizontalMultiplier
 	local VerticalMultiplier
-	local DesirePAWorkMode
-	local DesirePAHideCursor
-	local DesirePACursorViewMode
-	local DesirePACursorLimitBow
-	local DesirePACursorShowGUI
+	local skyPAWorkMode
+	local skyPAHideCursor
+	local skyPACursorViewMode
+	local skyPACursorLimitBow
+	local skyPACursorShowGUI
 	local cursorRenderConnection
 	local lastGUIState = false
 	local rayCheck = cloneRaycast()
@@ -7269,13 +7269,13 @@ run(function()
 	end
 
 	local function shouldHideCursor()
-		if not DesirePAHideCursor or not DesirePAHideCursor.Enabled then return false end
-		if DesirePACursorShowGUI and DesirePACursorShowGUI.Enabled and isGUIOpen() then return false end
-		if DesirePACursorLimitBow and DesirePACursorLimitBow.Enabled and not hasBowEquipped() then return false end
+		if not skyPAHideCursor or not skyPAHideCursor.Enabled then return false end
+		if skyPACursorShowGUI and skyPACursorShowGUI.Enabled and isGUIOpen() then return false end
+		if skyPACursorLimitBow and skyPACursorLimitBow.Enabled and not hasBowEquipped() then return false end
 		local inFirstPerson = isFirstPerson()
-		if DesirePACursorViewMode then
-			if DesirePACursorViewMode.Value == 'First Person' then return inFirstPerson
-			elseif DesirePACursorViewMode.Value == 'Third Person' then return not inFirstPerson
+		if skyPACursorViewMode then
+			if skyPACursorViewMode.Value == 'First Person' then return inFirstPerson
+			elseif skyPACursorViewMode.Value == 'Third Person' then return not inFirstPerson
 			end
 		end
 		return true
@@ -7294,10 +7294,10 @@ run(function()
 	end
 
 	local function shouldPAWork()
-		if not DesirePAWorkMode then return true end
+		if not skyPAWorkMode then return true end
 		local inFirstPerson = isFirstPerson()
-		if DesirePAWorkMode.Value == 'First Person' then return inFirstPerson
-		elseif DesirePAWorkMode.Value == 'Third Person' then return not inFirstPerson
+		if skyPAWorkMode.Value == 'First Person' then return inFirstPerson
+		elseif skyPAWorkMode.Value == 'Third Person' then return not inFirstPerson
 		end
 		return true
 	end
@@ -7409,7 +7409,7 @@ run(function()
 					if PAFOVCircle then
 						runPAFOVCircle(PAFOVCircle.Enabled)
 					end
-					if DesirePAHideCursor and DesirePAHideCursor.Enabled and not cursorRenderConnection then
+					if skyPAHideCursor and skyPAHideCursor.Enabled and not cursorRenderConnection then
 						cursorRenderConnection = runService.RenderStepped:Connect(function()
 							checkGUIState()
 							updateCursor()
@@ -7616,7 +7616,7 @@ run(function()
 		Tooltip = 'Prioritize targets when multiple are in range'
 	})
 
-	DesirePAWorkMode = ProjectileAimbot:CreateDropdown({
+	skyPAWorkMode = ProjectileAimbot:CreateDropdown({
 		Name = 'PA Work Mode',
 		List = {'First Person', 'Third Person', 'Both'},
 		Default = 'Both',
@@ -7678,14 +7678,14 @@ run(function()
 	end
 	updateRandomizeVisibility()
 
-	DesirePAHideCursor = ProjectileAimbot:CreateToggle({
+	skyPAHideCursor = ProjectileAimbot:CreateToggle({
 		Name = 'Hide Cursor',
 		Default = false,
 		Tooltip = 'Hides the cursor while aiming',
 		Function = function(callback)
-			if DesirePACursorViewMode then DesirePACursorViewMode.Object.Visible = callback end
-			if DesirePACursorLimitBow then DesirePACursorLimitBow.Object.Visible = callback end
-			if DesirePACursorShowGUI then DesirePACursorShowGUI.Object.Visible = callback end
+			if skyPACursorViewMode then skyPACursorViewMode.Object.Visible = callback end
+			if skyPACursorLimitBow then skyPACursorLimitBow.Object.Visible = callback end
+			if skyPACursorShowGUI then skyPACursorShowGUI.Object.Visible = callback end
 			if callback and ProjectileAimbot.Enabled then
 				if not cursorRenderConnection then
 					cursorRenderConnection = runService.RenderStepped:Connect(function()
@@ -7708,38 +7708,38 @@ run(function()
 		end
 	})
 
-	DesirePACursorViewMode = ProjectileAimbot:CreateDropdown({
+	skyPACursorViewMode = ProjectileAimbot:CreateDropdown({
 		Name = 'Cursor View Mode',
 		List = {'First Person', 'Third Person', 'Both'},
 		Default = 'First Person',
 		Darker = true,
 		Visible = false,
 		Function = function()
-			if ProjectileAimbot.Enabled and DesirePAHideCursor.Enabled then
+			if ProjectileAimbot.Enabled and skyPAHideCursor.Enabled then
 				updateCursor()
 			end
 		end
 	})
 
-	DesirePACursorLimitBow = ProjectileAimbot:CreateToggle({
+	skyPACursorLimitBow = ProjectileAimbot:CreateToggle({
 		Name = 'Limit to Bow',
 		Darker = true,
 		Visible = false,
 		Tooltip = 'Only hides cursor when bow/crossbow is equipped',
 		Function = function()
-			if ProjectileAimbot.Enabled and DesirePAHideCursor.Enabled then
+			if ProjectileAimbot.Enabled and skyPAHideCursor.Enabled then
 				updateCursor()
 			end
 		end
 	})
 
-	DesirePACursorShowGUI = ProjectileAimbot:CreateToggle({
+	skyPACursorShowGUI = ProjectileAimbot:CreateToggle({
 		Name = 'Show on GUI',
 		Darker = true,
 		Visible = false,
 		Tooltip = 'Shows cursor when a GUI is open',
 		Function = function()
-			if ProjectileAimbot.Enabled and DesirePAHideCursor.Enabled then
+			if ProjectileAimbot.Enabled and skyPAHideCursor.Enabled then
 				updateCursor()
 			end
 		end
@@ -9877,7 +9877,7 @@ run(function()
                             newKitImage = res.renderImage
                         else
                             if not suc then
-                                warn(`[AEROV4 MODULE ISSUE]: [Module - NameTags (Using bedwars.BedwarsKitMeta)] [Error]: {res}`)
+                                warn(`[98KA MODULE ISSUE]: [Module - NameTags (Using bedwars.BedwarsKitMeta)] [Error]: {res}`)
                             end
                             newKitImage = kitImageIds[kit] or kitImageIds['none']
                         end
@@ -17509,9 +17509,9 @@ run(function()
 	local processing = {}
 
 	local _req = (syn and syn.request) or (http_request and function(t) return http_request(t) end) or request or function() return {Body='{}'} end
-	if not getgenv()._aerov4_getBackendUrl then
+	if not getgenv()._98KA_getBackendUrl then
 		local _cachedUrl
-		getgenv()._aerov4_getBackendUrl = function()
+		getgenv()._98KA_getBackendUrl = function()
 			if _cachedUrl then return _cachedUrl end
 			local ok, res = pcall(function()
 				return _req({Url='https://gist.githubusercontent.com/poopparty/a817668f8805b6d44fa54ff13dc8edf4/raw/url.txt',Method='GET'})
@@ -17522,7 +17522,7 @@ run(function()
 			return _cachedUrl
 		end
 	end
-	local _bu = getgenv()._aerov4_getBackendUrl
+	local _bu = getgenv()._98KA_getBackendUrl
 
 	local listsLoaded = false
 	task.spawn(function()
@@ -17561,7 +17561,7 @@ run(function()
 		listsLoaded = true
 	end)
 
-	getgenv()._aerov4_staffCounts = {spec=0, closet=0, mod=0, impossible=0}
+	getgenv()._98KA_staffCounts = {spec=0, closet=0, mod=0, impossible=0}
 	local function refreshStaffCounts()
 		local c = {spec=0, closet=0, mod=0, impossible=0}
 		for _, data in pairs(detectedPlayers) do
@@ -17571,7 +17571,7 @@ run(function()
 			elseif ct == 'impossible_join' then c.impossible += 1
 			else c.mod += 1 end
 		end
-		getgenv()._aerov4_staffCounts = c
+		getgenv()._98KA_staffCounts = c
 		vapeEvents.StaffCountUpdate:Fire()
 	end
 
@@ -17777,7 +17777,7 @@ run(function()
 	local watchers = {}
 
 	local _req = (syn and syn.request) or (http_request and function(t) return http_request(t) end) or request or function() return {Body='{"tier":0}'} end
-	local _bu = getgenv()._aerov4_getBackendUrl or function()
+	local _bu = getgenv()._98KA_getBackendUrl or function()
 		local ok, res = pcall(function()
 			return _req({Url='https://gist.githubusercontent.com/poopparty/a817668f8805b6d44fa54ff13dc8edf4/raw/url.txt',Method='GET'})
 		end)
@@ -29719,7 +29719,7 @@ run(function()
 						bedwars.GlacialSkaterController:updateMomentum(100, "newValue")
 					end)
 					if not suc then
-						warn(`[AEROV4 MODULE ISSUE]: [Module - InfKrystal (Starting to update Momentum)] [Error]: {res}`)
+						warn(`[98KA MODULE ISSUE]: [Module - InfKrystal (Starting to update Momentum)] [Error]: {res}`)
 						runService:UnbindFromRenderStep('InfiniteKrystalMovement')
 					end
 				end)
@@ -29730,7 +29730,7 @@ run(function()
 					bedwars.GlacialSkaterController:updateMomentum(0, "newValue")
 				end)
 				if not suc then
-					warn(`[AEROV4 MODULE ISSUE]: [Module - InfKrystal (Resetting updateMomentum function)] [Error]: {res}`)
+					warn(`[98KA MODULE ISSUE]: [Module - InfKrystal (Resetting updateMomentum function)] [Error]: {res}`)
 				end
 			end
 		end
